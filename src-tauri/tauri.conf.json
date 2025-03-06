@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "audio-control",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "com.audiocontroll.dev",
   "build": {
     "frontendDist": "../build",
     "devUrl": "http://localhost:5173",
@@ -13,17 +13,20 @@
     "windows": [
       {
         "title": "MacOS Audio Manager",
-        "width": 800,
+        "width": 1000,
         "height": 600,
         "resizable": true,
         "fullscreen": false
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self' blob: data: media:; script-src 'self' 'unsafe-eval';"
     }
   },
   "bundle": {
+    "macOS": {
+			"entitlements": "entitlements.plist"
+    },
     "active": true,
     "targets": "all",
     "icon": [

@@ -1,6 +1,6 @@
 <script>
-  import Greet from '../lib/Greet.svelte'
+  import Transcribe from '../lib/Transcribe.svelte';
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<Greet />
+<h1>Local Transcribe App</h1>
+<Transcribe />
