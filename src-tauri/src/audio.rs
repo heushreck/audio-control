@@ -91,9 +91,23 @@ impl Recorder {
     }
 
     pub fn stop_recording(&mut self) {
+
+        {
+            let mut recording = self.is_recording.lock().unwrap();
+            if !*recording {
+                println!("Recording is not active.");
+                return;
+            }
+        }
+
         {
             let mut stop_signal = self.stop_signal.lock().unwrap();
             *stop_signal = false;
+        }
+
+        {
+            let mut recording = self.is_recording.lock().unwrap();
+            *recording = false;
         }
 
         println!("Stopping recording...");
@@ -101,6 +115,8 @@ impl Recorder {
         if let Some(thread_handle) = self.transcribe_thread.take() {
             thread_handle.join().expect("Failed to join transcription thread");
         }
+        // drop the microphone stream
+        drop(self.microphone_stream.take());
 
         let spec = hound::WavSpec {
             channels: 1,
