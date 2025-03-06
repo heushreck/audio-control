@@ -41,8 +41,12 @@
       }, typingSpeed);
     }
   
-    async function record_audio() {
-      await invoke('record_audio', { });
+    async function start_recording() {
+      await invoke('start_recording', { });
+    }
+
+    async function stop_recording() {
+      await invoke('stop_recording', { });
     }
   
     onDestroy(() => {
@@ -74,13 +78,18 @@
         transition: background-color 0.3s;
     }
 
+    .stop {
+        background-color: #dc3545;
+    }
+
     button:hover {
         background-color: #0056b3;
     }
   </style>
   
   <div>
-    <button on:click={record_audio}>🎤 Start Recording</button>
+    <button class="start" on:click={start_recording}>🎤 Start Recording</button>
+    <button class="stop" on:click={stop_recording}>🙅‍♀️ Stop Recording</button>
     <div class="machine-code">
       {transcript}
     </div>
