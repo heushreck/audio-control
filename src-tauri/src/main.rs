@@ -4,6 +4,7 @@ use std::sync::Arc;
 use std::sync::mpsc;
 use tauri::{AppHandle, Emitter};
 
+mod whisper;
 mod audio;
 use audio::Recorder;
 
@@ -40,6 +41,10 @@ async fn send_transcrib_chunks_back(app: AppHandle, receiver_channel: mpsc::Rece
 fn main() {
     // Create the recorder instance
     let recorder = Arc::new(Mutex::new(Recorder::new()));
+
+    let path_to_model = "model/ggml-tiny.en.bin";
+
+    whisper::init(&path_to_model);
 
     tauri::Builder::default()
         .manage(recorder.clone()) // Share the recorder state with Tauri commands

@@ -2,6 +2,9 @@ use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
 use std::sync::{Arc, Mutex, mpsc};
 use std::thread;
 use hound;
+use vad_rs::{Normalizer, Vad, VadStatus};
+
+use crate::whisper;
 
 pub struct Recorder {
     is_recording: Arc<Mutex<bool>>,
@@ -29,8 +32,13 @@ impl Recorder {
         let host = cpal::default_host();
         let device = host.default_input_device().expect("No input device available");
         let config = device.default_input_config().expect("Failed to get default input config");
+        println!("Default input config: {:?}", config);
         let sample_format = config.sample_format();
+        let sample_rate = config.sample_rate().0;
+        let channels = config.channels();
+        println!("Sample format: {:?} Channels: {} Sample rate: {}", sample_format, channels, sample_rate);
         let config: cpal::StreamConfig = config.into();
+        
 
         let recorded_samples_clone = self.recorded_samples.clone();
         // let is_recording_clone = self.is_recording.clone();
@@ -72,16 +80,27 @@ impl Recorder {
         let stop_signal_clone = self.stop_signal.clone();
 
         println!("Recording started...");
-        // Spawn a transcription thread
+
+
+        // Define a constant for the minimum number of samples (e.g., 1 second at 48kHz)
+        const MIN_SAMPLES: usize = 49_000;
+
         let transcribe_handle = thread::spawn(move || {
-            let mut i = 0;
+            let mut audio_buffer: Vec<f32> = Vec::new();
             while *stop_signal_clone.lock().unwrap() {
-                if let Ok(data) = receiver_channel.recv() {
-                    if i % 50 == 0 {
-                        println!("Received audio chunk #{} with {} samples", i, data.len());
-                        let _ = transcribe_channel.send("Nicolas ".to_string());
+                if let Ok(chunk) = receiver_channel.recv() {
+                    audio_buffer.extend(chunk);
+                    // Check if we've accumulated enough audio samples for transcription
+                    if audio_buffer.len() >= MIN_SAMPLES {
+                        // Convert the audio from 44100 Hz to 16000 Hz for Whisper
+                        let resampled: Vec<f32> = vad_rs::audio_resample(&audio_buffer, sample_rate, 16_000, channels);
+                        // Call Whisper to transcribe the resampled audio stream
+                        if let Some(text) = whisper::transcribe(&resampled) {
+                            let _ = transcribe_channel.send(text);
+                        }
+                        // Clear the buffer for the next segment
+                        audio_buffer.clear();
                     }
-                    i += 1;
                 }
             }
             println!("Transcription thread stopped.");

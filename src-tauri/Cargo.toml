@@ -27,3 +27,18 @@ tauri-plugin-log = "2.0.0-rc"
 cpal = "0.15"
 hound = "3.5"
 tokio = { version = "1", features = ["full"] }
+once_cell = "1.19.0"
+vad-rs = "0.1.5"
+
+
+[target.'cfg(target_os = "macos")'.dependencies]
+whisper-rs = { git = "https://github.com/thewh1teagle/whisper-rs.git", branch = "v1.6.3-beta.0", features = [
+    "whisper-cpp-tracing",
+    "coreml",
+] }
+
+[target.'cfg(not(target_os = "macos"))'.dependencies]
+whisper-rs = { git = "https://github.com/thewh1teagle/whisper-rs.git", branch = "v1.6.3-beta.0", features = [
+    "whisper-cpp-tracing",
+    "vulkan",
+] }
