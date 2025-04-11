@@ -1,38 +1,66 @@
-# sv
+# Audio Control
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A macOS desktop application for real-time speech-to-text transcription using local processing. Built with Svelte frontend and Tauri (Rust) backend, this application provides minimal latency transcription using the Whisper.rs engine.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- Real-time speech-to-text transcription
+- Local processing - no data leaves your computer
+- Minimal latency
+- macOS native desktop application
+- Built with Svelte and Tauri for optimal performance
+
+## Prerequisites
+
+- macOS
+- Node.js (v16 or later)
+- Rust (latest stable version)
+- Whisper model files (see below)
+
+## Whisper Models
+
+This application uses Whisper.rs for local speech recognition. You'll need to download the appropriate model files:
+
+1. Visit [Whisper.rs GitHub](https://github.com/tazz4843/whisper-rs) for model information
+2. Download the model files (recommended: `ggml-base.en.bin` for English)
+3. Place the model file in the application's model directory
+
+## Development
+
+To run the application in development mode:
 
 ```bash
-# create a new project in the current directory
-npx sv create
+# Install dependencies
+npm install
 
-# create a new project in my-app
-npx sv create my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# Start the development server
+npm run tauri dev
 ```
 
 ## Building
 
-To create a production version of your app:
+To create a production build:
 
 ```bash
-npm run build
+# Build the application
+npm run tauri build
 ```
 
-You can preview the production build with `npm run preview`.
+The built application will be available in the `src-tauri/target/release` directory.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## Usage
+
+1. Launch the application
+2. Select your audio input device
+3. Start speaking - your words will be transcribed in real-time
+4. The transcribed text will appear in the application window
+
+## Notes
+
+- For best performance, use a model size appropriate for your hardware
+- The application processes all audio locally - no internet connection required
+- Initial transcription might take a moment as the model loads into memory
+
+## License
+
+[Your License Here]

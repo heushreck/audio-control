@@ -1,0 +1,41 @@
+# Audio Control Configuration
+
+# Audio recording settings
+audio:
+  # Recording configuration
+  recording:
+    # Path where recorded audio will be saved
+    output_path: "output.wav"
+    # Whether to save the recorded audio to a file
+    save_to_file: true
+    # Sample rate for the output WAV file (Hz)
+    output_sample_rate: 44100
+    # Bits per sample for the output WAV file
+    output_bits_per_sample: 16
+    # Number of channels for the output WAV file (1 = mono, 2 = stereo)
+    output_channels: 1
+  
+  # Transcription configuration
+  transcription:
+    # Path to the Whisper model file
+    path_to_model: "model/ggml-tiny.en.bin"
+    # Language to use for transcription
+    language: "en"
+    # Minimum duration in seconds required for transcription
+    min_duration_seconds: 1.0
+    # Sample rate required by Whisper model (Hz)
+    whisper_sample_rate: 16000
+    # Minimum number of samples needed for transcription (approx. 1 second at 48kHz)
+    min_transcription_samples: 49000
+  
+  # Performance settings
+  performance:
+    # Buffer capacity for async channels
+    channel_buffer_size: 128
+
+# Command detection settings
+commands:
+  # Trigger word that activates command detection
+  trigger_word: "hey computer"
+  # Minimum confidence required to recognize a command
+  min_confidence: 0.7 
