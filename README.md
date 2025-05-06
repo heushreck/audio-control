@@ -22,8 +22,8 @@ A macOS desktop application for real-time speech-to-text transcription using loc
 This application uses Whisper.rs for local speech recognition. You'll need to download the appropriate model files:
 
 1. Visit [Whisper.rs GitHub](https://github.com/tazz4843/whisper-rs) for model information
-2. Download the model files (recommended: `ggml-base.en.bin` for English)
-3. Place the model file in the application's model directory
+2. Download the model files from [here](https://huggingface.co/ggerganov/whisper.cpp/tree/main) (recommended: `ggml-base.en.bin` for English)
+3. Place the model file in the application's model directory in `src-tauri/model`
 
 ## Development
 
